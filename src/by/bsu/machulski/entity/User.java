@@ -77,11 +77,11 @@ public class User extends Entity {
         this.balance = balance;
     }
 
-    public boolean isBlocked() {
+    public boolean getIsBlocked() {
         return isBlocked;
     }
 
-    public void setBlocked(boolean blocked) {
+    public void setIsBlocked(boolean blocked) {
         isBlocked = blocked;
     }
 

@@ -8,21 +8,21 @@ public class Product extends Entity {
     private int availableQuantity;
     private String productForm;
     private String formDescription;
-    private boolean isRecipeRequired;
+    private boolean isPrescriptionRequired;
     private boolean isDeleted;
 
     public Product() {
     }
 
     public Product(long id, String name, BigDecimal price, int availableQuantity, String productForm,
-                   String formDescription, boolean isRecipeRequired, boolean isDeleted) {
+                   String formDescription, boolean isPrescriptionRequired, boolean isDeleted) {
         super(id);
         this.name = name;
         this.price = price;
         this.availableQuantity = availableQuantity;
         this.productForm = productForm;
         this.formDescription = formDescription;
-        this.isRecipeRequired = isRecipeRequired;
+        this.isPrescriptionRequired = isPrescriptionRequired;
         this.isDeleted = isDeleted;
     }
 
@@ -66,19 +66,19 @@ public class Product extends Entity {
         this.formDescription = formDescription;
     }
 
-    public boolean getIsRecipeRequired() {
-        return isRecipeRequired;
+    public boolean getIsPrescriptionRequired() {
+        return isPrescriptionRequired;
     }
 
-    public void setIsRecipeRequired(boolean recipeRequired) {
-        isRecipeRequired = recipeRequired;
+    public void setIsPrescriptionRequired(boolean prescriptionRequired) {
+        isPrescriptionRequired = prescriptionRequired;
     }
 
-    public boolean isDeleted() {
+    public boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public void setIsDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 
@@ -91,7 +91,7 @@ public class Product extends Entity {
         Product product = (Product) o;
 
         if (availableQuantity != product.availableQuantity) return false;
-        if (isRecipeRequired != product.isRecipeRequired) return false;
+        if (isPrescriptionRequired != product.isPrescriptionRequired) return false;
         if (isDeleted != product.isDeleted) return false;
         if (name != null ? !name.equals(product.name) : product.name != null) return false;
         if (price != null ? !price.equals(product.price) : product.price != null) return false;
@@ -107,7 +107,7 @@ public class Product extends Entity {
         result = 31 * result + availableQuantity;
         result = 31 * result + (productForm != null ? productForm.hashCode() : 0);
         result = 31 * result + (formDescription != null ? formDescription.hashCode() : 0);
-        result = 31 * result + (isRecipeRequired ? 1 : 0);
+        result = 31 * result + (isPrescriptionRequired ? 1 : 0);
         result = 31 * result + (isDeleted ? 1 : 0);
         return result;
     }

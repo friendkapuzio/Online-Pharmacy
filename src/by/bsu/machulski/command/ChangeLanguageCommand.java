@@ -1,10 +1,10 @@
 package by.bsu.machulski.command;
 
 import by.bsu.machulski.constant.SessionAttributeConstant;
-import by.bsu.machulski.content.SessionRequestContent;
+import by.bsu.machulski.controller.SessionRequestContent;
 import by.bsu.machulski.exception.NoSuchParameterException;
 import by.bsu.machulski.type.RoutingType;
-import by.bsu.machulski.util.Router;
+import by.bsu.machulski.controller.Router;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,7 @@ public class ChangeLanguageCommand extends AbstractCommand {
             String language = content.getFirstParameterValue(LANGUAGE_PARAMETER);
             content.putSessionAttribute(SessionAttributeConstant.LOCALE, language);
         } catch (NoSuchParameterException e) {
-            LOGGER.log(Level.WARN, "Wrong request parameters.");
+            LOGGER.log(Level.WARN, "Wrong request parameters.", e);
         }
         return router;
     }

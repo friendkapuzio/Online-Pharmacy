@@ -8,7 +8,9 @@ import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +21,7 @@ public class ConnectionPool {
     private static AtomicBoolean isCreated = new AtomicBoolean(false);
     private static ReentrantLock lock = new ReentrantLock();
     private final int CAPACITY;
+    private static AtomicInteger brokenConnectionsNumber = new AtomicInteger(0);
     private BlockingQueue<ProxyConnection> connections;
 
     private ConnectionPool() {
@@ -33,12 +36,17 @@ public class ConnectionPool {
         }
         String url = configurator.getURL();
         Properties properties = configurator.getProperties();
-        try {
-            for (int i = 0; i < CAPACITY; ++i) {
+        for (int i = 0; i < CAPACITY; ++i) {
+            try {
                 connections.add(new ProxyConnection(DriverManager.getConnection(url, properties)));
+            } catch (SQLException e) {
+                LOGGER.log(Level.ERROR, "Connection has not been added.", e);
+                brokenConnectionsNumber.incrementAndGet();
             }
-        } catch (SQLException e) {
-            LOGGER.log(Level.ERROR, "Connection has not been added.", e);
+        }
+        if (brokenConnectionsNumber.get() == CAPACITY) {
+            LOGGER.log(Level.FATAL, "No connections");
+            throw new RuntimeException();
         }
     }
 
@@ -59,10 +67,32 @@ public class ConnectionPool {
 
     public ProxyConnection takeConnection() {
         ProxyConnection connection = null;
-        try {
-            connection = connections.take();
-        } catch (InterruptedException e) {
-            LOGGER.log(Level.ERROR, e);
+        while (connection == null) {
+            if (brokenConnectionsNumber.get() == CAPACITY) {
+                LOGGER.log(Level.FATAL, "No connections");
+                throw new RuntimeException();
+            }
+            try {
+                connection = connections.take();
+                if (!connection.isValid(0)) {
+                    try {
+                        connection.realClose();
+                    } catch (SQLException e) {
+                        LOGGER.log(Level.ERROR, "Error during closing connection", e);
+                    } finally {
+                        connection = null;
+                        PoolConfigurator configurator = new PoolConfigurator();
+                        String url = configurator.getURL();
+                        Properties properties = configurator.getProperties();
+                        connections.add(new ProxyConnection(DriverManager.getConnection(url, properties)));
+                    }
+                }
+            } catch (SQLException e) {
+                LOGGER.log(Level.ERROR, "Cannot create connection");
+                brokenConnectionsNumber.incrementAndGet();
+            } catch (InterruptedException e) {
+                LOGGER.log(Level.ERROR, e);
+            }
         }
         return connection;
     }
@@ -88,5 +118,9 @@ public class ConnectionPool {
         } catch (InterruptedException | SQLException e) {
             LOGGER.log(Level.ERROR, e);
         }
+    }
+
+    private void recreateConnections() {
+
     }
 }

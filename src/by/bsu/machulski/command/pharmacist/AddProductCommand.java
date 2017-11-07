@@ -1,24 +1,25 @@
 package by.bsu.machulski.command.pharmacist;
 
 import by.bsu.machulski.command.AbstractCommand;
+import by.bsu.machulski.constant.message.PharmacistActionMessage;
 import by.bsu.machulski.constant.PageConfigConstant;
 import by.bsu.machulski.constant.SessionAttributeConstant;
-import by.bsu.machulski.content.SessionRequestContent;
+import by.bsu.machulski.controller.SessionRequestContent;
 import by.bsu.machulski.exception.LogicException;
 import by.bsu.machulski.exception.NoSuchParameterException;
 import by.bsu.machulski.logic.ProductLogic;
 import by.bsu.machulski.resource.ConfigurationManager;
 import by.bsu.machulski.resource.MessageManager;
-import by.bsu.machulski.type.ProductOperationStatus;
+import by.bsu.machulski.type.ProductOperationError;
 import by.bsu.machulski.type.RoutingType;
-import by.bsu.machulski.util.Router;
+import by.bsu.machulski.controller.Router;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.EnumSet;
 
-import static by.bsu.machulski.command.pharmacist.ProductAttributeConstant.*;
+import static by.bsu.machulski.constant.ProductAttributeConstant.*;
 
 public class AddProductCommand extends AbstractCommand {
     private static final Logger LOGGER = LogManager.getLogger(AddProductCommand.class);
@@ -32,14 +33,16 @@ public class AddProductCommand extends AbstractCommand {
             String quantity = content.getFirstParameterValue(PRODUCT_QUANTITY);
             String form = content.getFirstParameterValue(PRODUCT_FORM);
             String formDescription = content.getFirstParameterValue(FORM_DESCRIPTION);
-            String isRecipeRequired = content.getFirstParameterValue(PRODUCT_RECIPE_REQUIRED);
-            EnumSet<ProductOperationStatus> addStatus = new ProductLogic().addProduct(name, price, quantity, form, formDescription, isRecipeRequired);
-            if (addStatus.isEmpty()) {
+            String isPrescriptionRequired = content.getFirstParameterValue(PRODUCT_PRESCRIPTION_REQUIRED);
+            EnumSet<ProductOperationError> errors = new ProductLogic().create(name, price, quantity, form, formDescription, isPrescriptionRequired);
+            if (errors.isEmpty()) {
                 router.setRoutingType(RoutingType.REDIRECT);
-                router.setPath(ConfigurationManager.getProperty(PageConfigConstant.PRODUCT_ADDED));
+                String path = ConfigurationManager.getPath(PageConfigConstant.MESSAGE);
+                path = ConfigurationManager.addParameter(path, MESSAGE_PARAMETER, PharmacistActionMessage.PRODUCT_ADDED);
+                router.setPath(path);
             } else {
                 String locale = (String) content.getSessionAttribute(SessionAttributeConstant.LOCALE);
-                for (ProductOperationStatus it:addStatus) {
+                for (ProductOperationError it:errors) {
                     content.putRequestAttribute(it.getMessageAttribute(), MessageManager.getProperty(it.getMessagePath(), locale));
                 }
                 content.putRequestAttribute(PRODUCT_NAME, name);
@@ -47,18 +50,18 @@ public class AddProductCommand extends AbstractCommand {
                 content.putRequestAttribute(PRODUCT_QUANTITY, quantity);
                 content.putRequestAttribute(PRODUCT_FORM, form);
                 content.putRequestAttribute(FORM_DESCRIPTION, formDescription);
-                content.putRequestAttribute(PRODUCT_RECIPE_REQUIRED, isRecipeRequired);
+                content.putRequestAttribute(PRODUCT_PRESCRIPTION_REQUIRED, isPrescriptionRequired);
                 router.setRoutingType(RoutingType.FORWARD);
-                router.setPath(ConfigurationManager.getProperty(PageConfigConstant.ADD_PRODUCT));
+                router.setPath(ConfigurationManager.getPath(PageConfigConstant.ADD_PRODUCT));
             }
         } catch (NoSuchParameterException e) {
-            LOGGER.log(Level.WARN, "Wrong request parameters.");
+            LOGGER.log(Level.WARN, "Wrong request parameters.", e);
             router.setRoutingType(RoutingType.REDIRECT);
-            router.setPath(ConfigurationManager.getProperty(PageConfigConstant.WRONG_REQUEST));
+            router.setPath(ConfigurationManager.getPath(PageConfigConstant.WRONG_REQUEST));
         } catch (LogicException e) {
-            LOGGER.log(Level.ERROR, e);
+            LOGGER.log(Level.ERROR, "Logic error", e);
             router.setRoutingType(RoutingType.REDIRECT);
-            router.setPath(ConfigurationManager.getProperty(PageConfigConstant.ERROR_LOGIC));
+            router.setPath(ConfigurationManager.getPath(PageConfigConstant.ERROR_LOGIC));
         }
         return router;
     }

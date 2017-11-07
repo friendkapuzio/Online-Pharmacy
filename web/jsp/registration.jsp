@@ -5,61 +5,65 @@
 <fmt:setBundle basename="resources.content"/>
 <html>
   <head>
-    <title><fmt:message key="title.registration"/></title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link href="../css/bootstrap.css" rel="stylesheet">
+    <title><fmt:message key="title.registration"/></title>
   </head>
   <body>
-    <div class="container-fluid">
+    <c:set var="path" value="/jsp/registration.jsp" scope="session"/>
+    <div class="container">
       <form name="registration" action="${pageContext.request.contextPath}/controller" method="post">
-        <div>
-          <label>
-            <fmt:message key="label.email"/>:
-            <input type="email" name="email" <%--pattern=".+@[a-z]{1,10}\.[a-z]{1,10}"--%> required
-                   placeholder="email@example.com" value="${email}">
-          </label>
+
+        <div class="form-group">
+          <label for="email"><fmt:message key="label.email"/>:</label>
+          <input id="email" name="email" type="email" class="form-control" pattern=".+@[a-z]{1,10}\.[a-z]{1,10}" required
+                 placeholder="email@example.com" value="<c:out value="${email}"/>"/>
           <c:if test="${not empty incorrectEmail}">
-            ${incorrectEmail}
+            <c:out value="${incorrectEmail}"/>
           </c:if>
           <c:if test="${not empty existingEmail}" >
-            ${existingEmail}
+            <c:out value="${existingEmail}"/>
           </c:if>
         </div>
-        <div>
-          <label>
-            <fmt:message key="label.name"/>:
-            <input type="text" name="name" pattern=".{1,32}" title="<fmt:message key="prompt.name"/>" required
-                   placeholder="<fmt:message key="placeholder.name"/>" value="${name}">
-          </label>
+
+        <div class="form-group">
+          <label for="name"><fmt:message key="label.name"/>:</label>
+          <input id="name" name="name" type="text" class="form-control" pattern=".{1,32}" title="<fmt:message key="prompt.name"/>" required
+                 placeholder="<fmt:message key="placeholder.name"/>" value="<c:out value="${name}"/>"/>
           <c:if test="${not empty incorrectName}">
-            ${incorrectName}
+            <c:out value="${incorrectName}"/>
           </c:if>
         </div>
-        <div>
-          <label>
-            <fmt:message key="label.password"/>:
-            <input type="password" name="password" pattern=".{6,32}" title="<fmt:message key="prompt.password"/>" required
-                   placeholder="<fmt:message key="placeholder.password"/>">
-          </label>
+
+        <div class="form-group">
+          <label for="password"><fmt:message key="label.password"/>:</label>
+          <input id="password" name="password" type="password" class="form-control" pattern=".{6,32}" title="<fmt:message key="prompt.password"/>" required
+                 placeholder="<fmt:message key="placeholder.password"/>">
           <c:if test="${not empty incorrectPassword}">
-            ${incorrectPassword}
+            <c:out value="${incorrectPassword}"/>
           </c:if>
         </div>
-        <div>
-          <label>
-            <fmt:message key="label.confirm_password"/>:
-            <input type="password" name="confirmPassword" pattern=".{6,32}" title="<fmt:message key="prompt.password"/>" required
-                   placeholder="<fmt:message key="placeholder.confirm_password"/>">
-          </label>
+
+        <div class="form-group">
+          <label for="confirmPassword"><fmt:message key="label.password.confirm"/>:</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" class="form-control" pattern=".{6,32}" title="<fmt:message key="prompt.password"/>" required
+                 placeholder="<fmt:message key="placeholder.password.confirm"/>">
           <c:if test="${not empty mismatchedPassword}">
-            ${mismatchedPassword}
+            <c:out value="${mismatchedPassword}"/>
           </c:if>
         </div>
-        <button type="submit" name="command" value="register"><fmt:message key="label.register"/></button>
+
+        <button type="submit" name="command" value="register" class="btn btn-primary"><fmt:message key="label.register"/></button>
+
       </form>
       <form name="products" action="${pageContext.request.contextPath}/index.jsp" method="post">
-        <button type="submit"><fmt:message key="label.home"/></button>
+        <button class="btn btn-secondary" type="submit"><fmt:message key="label.home"/></button>
       </form>
+
+      <c:if test="${not empty userError}">
+        <c:out value="${userError}"/>
+      </c:if>
+
     </div>
   </body>
 </html>

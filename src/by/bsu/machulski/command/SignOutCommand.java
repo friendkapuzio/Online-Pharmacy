@@ -2,21 +2,23 @@ package by.bsu.machulski.command;
 
 import by.bsu.machulski.constant.PageConfigConstant;
 import by.bsu.machulski.constant.SessionAttributeConstant;
-import by.bsu.machulski.content.SessionRequestContent;
+import by.bsu.machulski.controller.SessionRequestContent;
 import by.bsu.machulski.resource.ConfigurationManager;
 import by.bsu.machulski.type.RoutingType;
-import by.bsu.machulski.util.Router;
+import by.bsu.machulski.controller.Router;
+import by.bsu.machulski.type.UserRole;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
 
 public class SignOutCommand extends AbstractCommand {
     @Override
     public Router execute(SessionRequestContent content) {
         content.putSessionAttribute(SessionAttributeConstant.USERNAME, null);
-        content.putSessionAttribute(SessionAttributeConstant.ROLE, null);
+        content.putSessionAttribute(SessionAttributeConstant.ROLE, UserRole.GUEST);
         content.putSessionAttribute(SessionAttributeConstant.USER_ID, null);
-        //todo delete order
-        Router router = new Router();
-        router.setRoutingType(RoutingType.REDIRECT);
-        router.setPath(ConfigurationManager.getProperty(PageConfigConstant.INDEX));
-        return router;
+        content.putSessionAttribute(SessionAttributeConstant.REGISTRATION_DATE, null);
+        content.putSessionAttribute(SessionAttributeConstant.CART, null);
+        return new Router(RoutingType.REDIRECT, ConfigurationManager.getPath(PageConfigConstant.INDEX));
     }
 }
