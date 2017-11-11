@@ -8,9 +8,6 @@ import by.bsu.machulski.type.RoutingType;
 import by.bsu.machulski.controller.Router;
 import by.bsu.machulski.type.UserRole;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-
 public class SignOutCommand extends AbstractCommand {
     @Override
     public Router execute(SessionRequestContent content) {

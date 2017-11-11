@@ -91,9 +91,9 @@
           </table>
         </c:when>
 
-        <c:otherwise>
+        <c:when test="${orders ne null}">
           <fmt:message key="message.orders.not_found"/>
-        </c:otherwise>
+        </c:when>
       </c:choose>
     </div>
 

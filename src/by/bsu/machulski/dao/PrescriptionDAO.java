@@ -33,6 +33,7 @@ public class PrescriptionDAO extends AbstractDAO<Prescription> {
             "WHERE `patient_id`=? AND `is_used`=0 AND `expiration_date` >= CURDATE()";
     private static final String SELECT_BY_DOCTOR_ID = "SELECT " + PRESCRIPTION_COLUMNS + " FROM `pharmacy`.`prescriptions` " +
             "WHERE `doctor_id`=?;";
+    private static final String SELECT_BY_ID = "SELECT " + PRESCRIPTION_COLUMNS + " FROM `pharmacy`.`prescriptions` WHERE `prescription_id`=?;";
     private static final String SELECT_PAST_BY_PATIENT_ID = "SELECT " + PRESCRIPTION_COLUMNS + " FROM `pharmacy`.`prescriptions` " +
             "WHERE `patient_id`=? AND (`is_used`=1 OR `expiration_date` < CURDATE())";
     private static final String UPDATE_AMOUNT = "UPDATE `pharmacy`.`prescriptions` SET `amount`=? WHERE `prescription_id`=?;";
@@ -76,11 +77,6 @@ public class PrescriptionDAO extends AbstractDAO<Prescription> {
         return prescriptions;
     }
 
-    @Override
-    public List<Prescription> findAll() {
-        return null;
-    }
-
     public List<Prescription> findActualByUserAndProduct(long userId, long productId) throws DAOException {
         List<Prescription> prescriptions = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ACTUAL_BY_PATIENT_AND_PRODUCT)) {
@@ -112,7 +108,17 @@ public class PrescriptionDAO extends AbstractDAO<Prescription> {
 
     @Override
     public Optional<Prescription> findById(long id) throws DAOException {
-        return null;
+        Prescription prescription = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                prescription = createPrescription(rs);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Failure to find prescription by id, id: " + id, e);
+        }
+        return Optional.ofNullable(prescription);
     }
 
     public List<Prescription> findPastByUser(long id) throws DAOException {

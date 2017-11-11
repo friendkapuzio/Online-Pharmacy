@@ -31,6 +31,7 @@ public class OrderDAO extends AbstractDAO<Order> {
     private static final String FIND_BY_USER_AND_YEAR = "SELECT " + ORDER_COLUMNS + " FROM pharmacy.orders WHERE `user_id`=? AND year(`placement_date`)=?;";
     private static final String FIND_PRODUCTS_INFO = "SELECT `product_id`, `amount`, `products_orders`.`price`, `name`, `production_form`, `form_description`, `is_prescription_required`, `is_deleted` FROM pharmacy.products_orders JOIN pharmacy.products USING (`product_id`) WHERE `order_id`=?;";
     private static final String INSERT_ORDER = "INSERT INTO `pharmacy`.`orders` (`user_id`) VALUES (?);";
+    private static final String SELECT_BY_ID = "SELECT " + ORDER_COLUMNS + " FROM `pharmacy`.`orders` WHERE `order_id`=?;";
     private static final String UPDATE_STATUS = "UPDATE `pharmacy`.`orders` SET `status`=? WHERE `order_id`=?;";
 
     public OrderDAO(ProxyConnection connection) {
@@ -90,13 +91,18 @@ public class OrderDAO extends AbstractDAO<Order> {
     }
 
     @Override
-    public List<Order> findAll() {
-        return null;
-    }
-
-    @Override
     public Optional<Order> findById(long id) throws DAOException {
-        return null;
+        Order order = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                order = createOrder(rs);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Failure to find order by id, id: " + id, e);
+        }
+        return Optional.ofNullable(order);
     }
 
     public List<Order> findByStatus(String status) throws DAOException {

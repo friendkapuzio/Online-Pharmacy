@@ -26,7 +26,7 @@
           <fmt:formatDate value="${registrationDate}" var="registrationYear" pattern="YYYY"/>
 
           <c:forEach var="optionYear" begin="${registrationYear}" end="${currentYear}">
-            <option value="${optionYear}" <c:if test="${optionYear eq currentYear}">selected</c:if>>${optionYear}</option>
+            <option value="${optionYear}" <c:if test="${optionYear eq year}">selected</c:if>>${optionYear}</option>
           </c:forEach>
         </select>
 
@@ -68,8 +68,7 @@
                     </c:if>
                     <c:if test="${fn:length(order.products) >= 3}">
                       <br>
-                      <c:out value="${fn:length(order.products) - 2}"/>
-                      <fmt:message key="label.order.products.more"/>
+                      <c:out value="${fn:length(order.products) - 2}"/> <fmt:message key="label.order.products.more"/>
                     </c:if>
                   </td>
 
@@ -82,9 +81,9 @@
           </table>
         </c:when>
 
-        <c:otherwise>
+        <c:when test="${orders ne null}">
           <fmt:message key="message.orders.not_found"/>
-        </c:otherwise>
+        </c:when>
       </c:choose>
     </div>
 

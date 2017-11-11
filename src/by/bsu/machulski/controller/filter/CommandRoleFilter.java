@@ -7,6 +7,7 @@ import by.bsu.machulski.resource.ConfigurationManager;
 import by.bsu.machulski.type.UserRole;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Optional;
 
+@WebFilter
 public class CommandRoleFilter implements Filter {
     private static final String COMMAND_PARAMETER = "command";
 

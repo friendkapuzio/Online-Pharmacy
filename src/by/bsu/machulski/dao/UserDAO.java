@@ -32,7 +32,6 @@ public class UserDAO extends AbstractDAO<User> {
     private static final String FIND_BY_EMAIL =
             "SELECT " + USER_COLUMNS + " FROM `pharmacy`.`users` WHERE `is_blocked`=? AND `email` LIKE ?;";
     private static final String MODIFY_BALANCE = "UPDATE `pharmacy`.`users` SET `balance`=`balance`+? WHERE `user_id`=?;";
-    private static final String SELECT_ALL = "SELECT " + USER_COLUMNS + " FROM `pharmacy`.`users`;";
     private static final String SELECT_BY_ID = "SELECT " + USER_COLUMNS + " FROM `pharmacy`.`users` WHERE `user_id`=?;";
     private static final String SELECT_BY_EMAIL = "SELECT " + USER_COLUMNS + " FROM `pharmacy`.`users` WHERE `email`=?;";
     private static final String SELECT_BY_EMAIL_AND_PASSWORD = "SELECT " + USER_COLUMNS + " FROM `pharmacy`.`users` WHERE `email`=? AND `password`=?;";
@@ -144,11 +143,6 @@ public class UserDAO extends AbstractDAO<User> {
             throw new DAOException("Failure to change user's role, id: " + id, e);
         }
         return isChanged;
-    }
-
-    @Override
-    public List<User> findAll() {
-        return null;
     }
 
     public List<User> findBlockedUsersByEmail(String searchText) throws DAOException {

@@ -114,10 +114,8 @@ public class CartLogic {
     }
 
     public boolean checkProducts(long userId, CartDTO cart) throws LogicException {
-//        boolean isRight = false;
         Collection<String> messages = checkAndGetProductsInfo(userId, cart).values();
         return messages.size() == 1 && messages.contains(null);
-//        return isRight;
     }
 
     public void removeProduct(CartDTO cart, String productId) throws LogicException {

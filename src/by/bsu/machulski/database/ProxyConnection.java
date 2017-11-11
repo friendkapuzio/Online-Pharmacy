@@ -60,7 +60,7 @@ public class ProxyConnection implements Connection {
     void realClose() throws SQLException {
         connection.close();
     }
-    //todo ConnectionPool.isContains(this)
+
     @Override
     public boolean isClosed() throws SQLException {
         return connection.isClosed();

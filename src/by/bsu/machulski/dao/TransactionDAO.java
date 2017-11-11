@@ -26,6 +26,7 @@ public class TransactionDAO extends AbstractDAO<Transaction> {
     private static final String TRANSACTION_COLUMNS = "`transaction_id`, `sender_id`, `receiver_id`, `date`, `amount`";
     private static final String FIND_BY_USER_AND_YEAR = "SELECT " + TRANSACTION_COLUMNS + " FROM pharmacy.transactions WHERE (`sender_id`=? OR `receiver_id`=?) AND year(`date`)=?;";;
     private static final String INSERT_TRANSACTION = "INSERT INTO `pharmacy`.`transactions` (`sender_id`, `receiver_id`, `amount`) VALUES (?, ?, ?);";
+    private static final String SELECT_BY_ID = "SELECT " + TRANSACTION_COLUMNS + " FROM `pharmacy`.`transactions` WHERE `transaction_id`=?;";
 
     public TransactionDAO(ProxyConnection connection) {
         super(connection);
@@ -49,13 +50,18 @@ public class TransactionDAO extends AbstractDAO<Transaction> {
     }
 
     @Override
-    public List<Transaction> findAll() {
-        return null;
-    }
-
-    @Override
     public Optional<Transaction> findById(long id) throws DAOException {
-        return null;
+        Transaction transaction = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {
+            preparedStatement.setLong(1, id);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                transaction = createTransaction(rs);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Failure to find transaction by id, id: " + id, e);
+        }
+        return Optional.ofNullable(transaction);
     }
 
     public List<Transaction> findByUserAndYear(long userId, int year) throws DAOException {

@@ -4,97 +4,127 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <fmt:setLocale value="${locale}"/>
 <fmt:setBundle basename="resources.content"/>
-<nav>
+<nav class="navbar sticky-top navbar-light" style="background-color: #96fd4b;">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+  <a class="navbar-brand" href="${pageContext.request.contextPath}/index.jsp">
+    <img src="../../images/miniLogo.png" alt="">
+  </a>
+      </div>
   <c:choose>
 
     <c:when test="${not empty username}">
-      <div class="btn-group">
+      <div class="col-sm">
+        <span class="navbar-text">
+          <fmt:message key="message.hello"/>, ${username}.
+        </span>
+      </div>
 
-        <fmt:message key="message.hello"/>, ${username}.
-
-        <form name="home" action="${pageContext.request.contextPath}/index.jsp" method="post">
+      <div class="col-sm">
+        <form class="form-inline" name="home" action="${pageContext.request.contextPath}/index.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.home"/></button>
         </form>
+      </div>
 
-        <form name="account" action="${pageContext.request.contextPath}/controller" method="post">
+      <div class="col-sm">
+        <form class="form-inline" name="account" action="${pageContext.request.contextPath}/controller" method="post">
           <button type="submit" class="btn btn-secondary" name="command" value="account"><fmt:message key="label.account"/></button>
         </form>
+      </div>
 
-        <form name="products" action="${pageContext.request.contextPath}/jsp/products.jsp" method="post">
+      <div class="col-sm">
+        <form class="form-inline" name="products" action="${pageContext.request.contextPath}/jsp/products.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.products"/></button>
         </form>
+      </div>
 
-        <form name="orders" action="${pageContext.request.contextPath}/jsp/user/orders.jsp" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="orders" action="${pageContext.request.contextPath}/jsp/user/orders.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.orders"/></button>
         </form>
+      </div>
 
-        <form name="prescriptions" action="${pageContext.request.contextPath}/jsp/user/prescriptions.jsp" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="prescriptions" action="${pageContext.request.contextPath}/jsp/user/prescriptions.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.prescriptions"/></button>
         </form>
-
+      </div>
         <ctg:doctor>
-          <form name="users" action="${pageContext.request.contextPath}/controller" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="users" action="${pageContext.request.contextPath}/controller" method="post">
             <button type="submit" class="btn btn-secondary" name="command" value="show_given_prescriptions"><fmt:message key="label.prescriptions.manage"/></button>
           </form>
+      </div>
         </ctg:doctor>
 
         <ctg:admin>
-          <form name="users" action="${pageContext.request.contextPath}/jsp/admin/users.jsp" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="users" action="${pageContext.request.contextPath}/jsp/admin/users.jsp" method="post">
             <button type="submit" class="btn btn-secondary"><fmt:message key="label.users"/></button>
           </form>
-          <form name="manage orders" action="${pageContext.request.contextPath}/jsp/admin/manage_orders.jsp" method="post">
+      </div>
+
+      <div class="col-sm">
+      <form class="form-inline" name="manage orders" action="${pageContext.request.contextPath}/jsp/admin/manage_orders.jsp" method="post">
             <button type="submit" class="btn btn-secondary"><fmt:message key="label.orders.manage"/></button>
           </form>
+      </div>
         </ctg:admin>
 
-        <form name="sign_out" action="${pageContext.request.contextPath}/controller" method="post">
+      <div class="col-sm">
+        <form class="form-inline" name="sign_out" action="${pageContext.request.contextPath}/controller" method="post">
           <button type="submit" class="btn btn-secondary" name="command" value="sign_out"><fmt:message key="label.sign.out"/></button>
         </form>
+      </div>
 
-        <form name="cart" action="${pageContext.request.contextPath}/controller" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="cart" action="${pageContext.request.contextPath}/controller" method="post">
           <button type="submit" class="btn btn-secondary" name="command" value="cart">
             <fmt:message key="label.cart"/>: <c:out value="${cart.total}"/>
           </button>
         </form>
-
       </div>
     </c:when>
 
     <c:otherwise>
-      <div class="btn-group">
+      <div class="col-sm-auto">
+      <form class="form-inline" name="sign_in" action="${pageContext.request.contextPath}/controller" method="post">
+          <input class="form-control" id="email" type="email" name="email" pattern=".+@[a-z]{1,10}\.[a-z]{1,10}" placeholder="email@example.com" required>
 
-        <form name="sign_in" action="${pageContext.request.contextPath}/controller" method="post">
-          <label>
-            <fmt:message key="label.email"/>:
-            <input type="email" name="email" pattern=".+@[a-z]{1,10}\.[a-z]{1,10}" placeholder="email@example.com" required>
-          </label>
-          <label>
-            <fmt:message key="label.password"/>:
-            <input type="password" name="password" pattern=".{6,32}" required>
-          </label>
+          <input class="form-control" id="password" type="password" name="password" pattern=".{6,32}"
+                 placeholder="<fmt:message key="placeholder.password"/>" required>
+
           <button type="submit" class="btn btn-secondary" name="command" value="sign_in">
             <fmt:message key="label.sign.in"/>
           </button>
         </form>
-        ${signInErrorMessage}
+        <c:out value="${signInErrorMessage}"/>
+      </div>
 
-        <form name="register" action="${pageContext.request.contextPath}/jsp/registration.jsp" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="register" action="${pageContext.request.contextPath}/jsp/registration.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.register"/></button>
         </form>
+      </div>
 
-        <form name="home" action="${pageContext.request.contextPath}/index.jsp" method="post">
+      <div class="col-sm">
+      <form class="form-inline" name="home" action="${pageContext.request.contextPath}/index.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.home"/></button>
         </form>
+      </div>
 
-        <form name="products" action="${pageContext.request.contextPath}/jsp/products.jsp" method="post">
+      <div class="col-sm">
+        <form class="form-inline" name="products" action="${pageContext.request.contextPath}/jsp/products.jsp" method="post">
           <button type="submit" class="btn btn-secondary"><fmt:message key="label.products"/></button>
         </form>
-
       </div>
+
     </c:otherwise>
 
   </c:choose>
-
+    </div>
+  </div>
   <%--${pageContext.request.requestURI}--%>
   <%--<br>--%>
   <%--${pageContext.request.requestURL}--%>

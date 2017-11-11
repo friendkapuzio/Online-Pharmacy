@@ -93,11 +93,6 @@ public class ProductDAO extends AbstractDAO<Product> {
     }
 
     @Override
-    public List<Product> findAll() {
-        return null;
-    }
-
-    @Override
     public Optional<Product> findById(long id) throws DAOException {
         Product product = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ID)) {

@@ -14,13 +14,15 @@
     <%@include file="common/header.jsp"%>
     <%@include file="common/language_panel.jsp"%>
 
-    <form name="search" action="${pageContext.request.contextPath}/controller" method="post">
+    <div class="container">
+    <form class="form-inline" name="search" action="${pageContext.request.contextPath}/controller" method="post">
       <label>
         <fmt:message key="label.product.name"/>
         <input type="text" name="searchText" pattern=".{0,100}" placeholder="<fmt:message key="placeholder.search"/>">
       </label>
       <button type="submit" name="command" value="search_product"><fmt:message key="label.search"/></button>
     </form>
+    </div>
 
     <table class="table table-striped">
       <thead>

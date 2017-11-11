@@ -61,12 +61,12 @@
 
       <form>
         <div class="form-group row">
-          <label for="registrationDate"><fmt:message key="label.registration_date"/></label>
+          <label for="registrationDate"><fmt:message key="label.registration_date"/>:</label>
           <input id="registrationDate" type="date" readonly class="form-control-plaintext" value="<c:out value="${user.registrationDate}"/>">
         </div>
 
         <div class="form-group row">
-          <label for="role"><fmt:message key="label.role"/></label>
+          <label for="role"><fmt:message key="label.role"/>:</label>
           <input id="role" readonly class="form-control-plaintext" value="<fmt:message key="label.user.role.${user.role.toString().toLowerCase()}"/>">
         </div>
       </form>
@@ -74,7 +74,7 @@
 
       <form name="balance" method="post">
         <div class="form-group row">
-          <label for="balance"><fmt:message key="label.balance.current"/></label>
+          <label for="balance"><fmt:message key="label.balance.current"/>:</label>
           <input id="balance" readonly class="form-control-plaintext" name="currentBalance" value="<c:out value="${user.balance}"/>">
         </div>
 
@@ -99,7 +99,7 @@
 
       <form name="password" action="${pageContext.request.contextPath}/controller" method="post">
         <div class="form-group row">
-          <label for="password"><fmt:message key="label.password.current"/></label>
+          <label for="password"><fmt:message key="label.password.current"/>:</label>
           <input id="password" name="password" type="password" class="form-control" pattern=".{6,32}" required
                  title="<fmt:message key="prompt.password"/>">
           <c:if test="${not empty incorrectPassword}">
@@ -108,16 +108,16 @@
         </div>
 
         <div class="form-group row">
-          <label for="newPassword"><fmt:message key="label.password.new"/></label>
+          <label for="newPassword"><fmt:message key="label.password.new"/>:</label>
           <input id="newPassword" name="newPassword" type="password" class="form-control" pattern=".{6,32}" required
-                 placeholder="<fmt:message key="placeholder.password"/>">
+                 placeholder="<fmt:message key="placeholder.password.new"/>">
           <c:if test="${not empty incorrectNewPassword}">
             ${incorrectNewPassword}
           </c:if>
         </div>
 
         <div class="form-group row">
-          <label for="confirmNewPassword"><fmt:message key="label.password.new.confirm"/></label>
+          <label for="confirmNewPassword"><fmt:message key="label.password.new.confirm"/>:</label>
           <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="form-control" pattern=".{6,32}" required
                  placeholder="<fmt:message key="placeholder.password.confirm"/>">
         </div>

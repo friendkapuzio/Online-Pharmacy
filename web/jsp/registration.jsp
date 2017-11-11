@@ -38,7 +38,7 @@
         <div class="form-group">
           <label for="password"><fmt:message key="label.password"/>:</label>
           <input id="password" name="password" type="password" class="form-control" pattern=".{6,32}" title="<fmt:message key="prompt.password"/>" required
-                 placeholder="<fmt:message key="placeholder.password"/>">
+                 placeholder="<fmt:message key="placeholder.password.new"/>">
           <c:if test="${not empty incorrectPassword}">
             <c:out value="${incorrectPassword}"/>
           </c:if>

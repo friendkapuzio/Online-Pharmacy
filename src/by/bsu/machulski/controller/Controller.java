@@ -4,9 +4,6 @@ import by.bsu.machulski.command.AbstractCommand;
 import by.bsu.machulski.database.ConnectionPool;
 import by.bsu.machulski.command.CommandFactory;
 import by.bsu.machulski.type.RoutingType;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
